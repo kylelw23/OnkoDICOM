@@ -142,6 +142,7 @@ class MenuBar(object):
 		self.actionROIDraw = QtWidgets.QAction(self.window)
 		self.actionROIDraw.setIcon(self.iconBrush)
 		self.actionROIDraw.setIconVisibleInMenu(True)
+		self.actionROIDraw.triggered.connect(self.handlers.roi_draw_options_handler)
 
 		# Delete ROI
 
@@ -158,7 +159,7 @@ class MenuBar(object):
 		self.actionAnonymize_and_Save.triggered.connect(self.handlers.anonymization_handler)
 
 		# Export DVH Spreadsheet Action
-		if self.window.has_rtss and self.window.has_rtdose:
+		if self.window.raw_dvh is not None:
 			self.actionDVH_Spreadsheet = QtWidgets.QAction(self.window)
 			self.actionDVH_Spreadsheet.triggered.connect(self.window.dvh.export_csv)
 
@@ -222,7 +223,7 @@ class MenuBar(object):
 		# Create sub-menu for Export item
 		self.menuExport = QtWidgets.QMenu(self.menuTools)
 		self.menuExport.setIcon(self.iconExport)
-		if self.window.has_rtss and self.window.has_rtdose:
+		if self.window.raw_dvh is not None:
 			self.menuExport.addAction(self.actionDVH_Spreadsheet)
 		self.menuExport.addAction(self.actionClinical_Data)
 		self.menuExport.addAction(self.actionPyradiomics)
@@ -356,7 +357,7 @@ class MenuBar(object):
 		# self.actionIsodose.setText(_translate("MainWindow", "ROI by Isodose"))
 		self.actionAddOn.setText(_translate("MainWindow", "Add-On Options..."))
 		self.actionAnonymize_and_Save.setText(_translate("MainWindow", "Anonymize and Save"))
-		if self.window.has_rtss and self.window.has_rtdose:
+		if self.window.raw_dvh is not None:
 			self.actionDVH_Spreadsheet.setText(_translate("MainWindow", "DVH"))
 		self.actionClinical_Data.setText(_translate("MainWindow", "Clinical Data"))
 		self.actionPyradiomics.setText(_translate("MainWindow", "Pyradiomics"))
@@ -426,6 +427,12 @@ class MenuHandler(object):
 		Function triggered when the Add-On Options button is pressed from the menu.
 		"""
 		self.main_window.callManager.show_add_on_options()
+
+	def roi_draw_options_handler(self):
+		"""
+			Function triggered when the ROI Draw button is pressed from the menu.
+		"""
+		self.main_window.drawROI.show_roi_draw_options()
 
 	def roi_delete_options_handler(self):
 		"""
